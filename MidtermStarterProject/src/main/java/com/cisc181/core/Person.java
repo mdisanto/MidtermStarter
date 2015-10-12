@@ -1,7 +1,10 @@
 package com.cisc181.core;
 
 import java.util.Calendar;
+
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
  * comment
@@ -15,6 +18,7 @@ public abstract class Person {
 	private String address;
 	private String phone_number;
 	private String email_address;
+	private Date date = new Date();
 
 	public String getFirstName() {
 		return FirstName;
@@ -84,14 +88,30 @@ public abstract class Person {
 	 */
 
 	public Person(String FirstName, String MiddleName, String LastName,
-			Date DOB, String Address, String Phone_number, String Email) {
-		this.FirstName = FirstName;
-		this.MiddleName = MiddleName;
-		this.LastName = LastName;
-		this.DOB = DOB;
-		this.address = Address;
-		this.phone_number = Phone_number;
-		this.email_address = Email;
+			Date DOB, String Address, String Phone_number, String Email) throws PersonException {
+		
+		date.setYear(date.getYear()-100);
+		String regex = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(Phone_number);
+				
+		
+		if(DOB.compareTo(date)<0){
+			throw new PersonException("Out of Date DOB");
+		}
+		
+		if (matcher.matches() == false){
+			throw new PersonException("Not a valid Phone Number");
+		}
+		else{
+			this.FirstName = FirstName;
+			this.MiddleName = MiddleName;
+			this.LastName = LastName;
+			this.DOB = DOB;
+			this.address = Address;
+			this.phone_number = Phone_number;
+			this.email_address = Email;
+		}
 		
 	}
 
